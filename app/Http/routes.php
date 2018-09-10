@@ -16,8 +16,14 @@ $app->get('/', function () use ($app) {
 });
 
 // CREATE
-$app->post('user_register', [
+$app->post('user_access', [
     'as' => 'UserAccessController.register', 'uses' => 'UserAccessController@register'
 ]);
 // READ
-$app->get('show_user',['as'=>'show_user.userdetail','uses'=>'UserAccessController@view_detail']);
+$app->get('sent_otp/{id}', [
+    'as' => 'UserAccessController.sent_otp', 'uses' => 'UserAccessController@sent_otp'
+]);
+$app->get('user_access/{id}', [
+    'as' => 'UserAccessController.sent_otp', 'uses' => 'UserAccessController@getUserData'
+]);
+// $app->get('show_user',['as'=>'show_user.userdetail','uses'=>'UserAccessController@view_detail']);
