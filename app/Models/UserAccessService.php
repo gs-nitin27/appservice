@@ -10,9 +10,14 @@ protected $guarded = ['userid'];
 
 public function get_userdata($id)
 {
- 
- // $phone = $user->posts()->where('contact_no', $id)->get();
-return $this->hasOne('App\Models\UserAccessService');
+// echo $id;die;
+$data =  UserAccessService::where('contact_no', $id)->get();
+if (sizeof($data) != 0) {
+	return $data;
+}else
+{
+	return 0;
+}
 
 }
 

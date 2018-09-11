@@ -40,21 +40,28 @@ class UserAccessController extends Controller
       $otpObj = new OtpVarifyService();
       $otp_code = mt_rand(1000,10000);
       $res = $otpObj->sendWay2SMS(9528454915,8824784642, $id, $otp_code);
-      if($res != 0)
-      {
-        return response()->json($res);
-      }
-      else
-      {
-        return response()->json("error");
-      }
+      if($res != '0')
+     {
+       $resp = array('status' =>'1' ,'message'=>'Success','data'=>$res);
+     }else
+     {
+       $resp = array('status' =>'0' ,'message'=>'Failure','data'=>[]);
+     }
+     return response()->json($res,200);
     }
 
     public function getUserData(Request $request,$id)
     {
      $new_score = new UserAccessService();
      $resp = $new_score->get_userdata($id);
-     print_r($resp);
+     if($resp != '0')
+     {
+       $resp = array('status' =>'1' ,'message'=>'Success','data'=>$resp);
+     }else
+     {
+       $resp = array('status' =>'0' ,'message'=>'Failure','data'=>[]);
+     }
+     return response()->json($resp,200);
     }
 
     public function view_detail()
