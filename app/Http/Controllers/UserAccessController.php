@@ -28,11 +28,13 @@ class UserAccessController extends Controller
        $new_score->gender=$request->input('gender');
        if($new_score->save())
        {
-        return response()->json($new_score);
-       }else
-       {
-        return response()->json("error");
+         $resp = array('status' =>'1' ,'data'=>$new_score,'message'=>'user registered' );    
        }
+       else
+       {
+        $resp = array('status' =>'0' ,'data'=>$new_score,'message'=>'user not registered' );    
+       }
+       return response()->json($resp);
     }
     //
     public function sent_otp(Request $request,$id)
@@ -41,13 +43,22 @@ class UserAccessController extends Controller
       $otp_code = mt_rand(1000,10000);
       $res = $otpObj->sendWay2SMS(9528454915,8824784642, $id, $otp_code);
       if($res != '0')
-     {
-       $resp = array('status' =>'1' ,'message'=>'Success','data'=>$res);
-     }else
-     {
+      {  $new_score = new UserAccessService(); 
+         $userdata = $new_score->get_userdata($id);
+        if ($userdata != '0')
+        {
+         $resp = array('status' =>'2' ,'data'=>$userdata,'message'=>'user registered','otp'=>$res );    
+        }
+        else
+        {
+         $resp = array('status' =>'1' ,'data'=>$userdata,'message'=>'user not registered','otp'=>$res ); 
+        }
+      }
+      else
+      {
        $resp = array('status' =>'0' ,'message'=>'Failure','data'=>[]);
-     }
-     return response()->json($res,200);
+      }
+     return response()->json($resp,200);
     }
 
     public function getUserData(Request $request,$id)
