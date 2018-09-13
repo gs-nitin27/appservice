@@ -20,12 +20,16 @@ class UserAccessController extends Controller
 
      public function register(Request $request)
     {  
+       $data = json_decode(file_get_contents('php://input'));
        $new_score = new UserAccessService();
-       $new_score->name=$request->input('name');
-       $new_score->email=$request->input('email');
-       $new_score->dob=$request->input('dob');
-       $new_score->contact_no=$request->input('phone');
-       $new_score->gender=$request->input('gender');
+       $userexist = $new_score->get_userdata($data->phone);
+       if($userexist != '0')
+       {
+       $new_score->name=$data->name;
+       $new_score->email=$data->email;
+       $new_score->dob=$data->dob;
+       $new_score->contact_no=$data->phone;
+       $new_score->gender=$data->gender;
        if($new_score->save())
        {
          $resp = array('status' =>'1' ,'data'=>$new_score,'message'=>'user registered' );    
@@ -34,6 +38,10 @@ class UserAccessController extends Controller
        {
         $resp = array('status' =>'0' ,'data'=>$new_score,'message'=>'user not registered' );    
        }
+        
+       }else
+       $resp = array('status' =>'0' ,'data'=>$new_score,'message'=>'user already registered' );
+       
        return response()->json($resp);
     }
     //
